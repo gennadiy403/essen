@@ -6,7 +6,7 @@ class Essen {
     let Server  = require('./core/Server.js');
     let Model   = require('./core/Model.js');
     this.server = new Server(this.settings.server);
-    this.model  = new Model(this.settings.db);
+    this.model  = new Model(this.settings.db, global);
   }
   start() {
     this.server.start();
