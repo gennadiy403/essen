@@ -1,3 +1,7 @@
+const async = require('async')
+const path = require('path')
+const fs = require('fs')
+
 module.exports = new class {
   constructor() {
     this.services = {};

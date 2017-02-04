@@ -12,17 +12,17 @@ class Router {
     });
   }
   loadControllers(cb) {
-    fs.readdir(path.join(this.essen.path.base, 'api/controllers'), (err, files_names) => {
+    fs.readdir(path.join(this.essen.path, 'api/controllers'), (err, files_names) => {
       async.each(files_names, (file_name, next) => {
         let controller_name = file_name.split('.')[0];
-        let file_path = path.join(this.essen.path.base, 'api/controllers/', file_name);
+        let file_path = path.join(this.essen.path, 'api/controllers/', file_name);
         this.controllers[controller_name] = require(file_path);
         return next();
       }, cb);
     });
   }
   loadRoutes() {
-    this.routes = require(path.join(this.essen.path.base, 'config/routes.js'));
+    this.routes = require(path.join(this.essen.path, 'config/routes.js'));
   }
   listenRoutes() {
     for (let url in this.routes) {

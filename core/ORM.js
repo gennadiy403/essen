@@ -1,5 +1,8 @@
 /* global essen log fs path async */
 
+const async = require('async');
+const fs = require('fs');
+const path = require('path');
 const mongoose = require('mongoose');
 
 module.exports = new class {
@@ -16,11 +19,13 @@ module.exports = new class {
     });
   }
   loadModels(cb) {
-    fs.readdir(path.join(essen.path.base, 'api/models/'), (err, files_names) => {
+    fs.readdir(path.join(essen.path, 'api/models/'), (err, files_names) => {
       async.each(files_names, (file_name, next) => {
-        const file_path = path.join(essen.path.base, 'api/models/', file_name);
-        const model_name = file_name.split('.')[0];
-        this.models[model_name] = require(file_path);
+        const file_path = path.join(essen.path, 'api/models/', file_name);
+        const model_name = file_name.split('Model')[0];
+        log.debug(model_name)
+        const schema = require(file_path);
+        this.models[model_name] = mongoose.model(model_name, new mongoose.Schema(schema));
         return next();
       }, cb);
     });
