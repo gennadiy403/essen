@@ -23,7 +23,6 @@ module.exports = new class {
       async.each(files_names, (file_name, next) => {
         const file_path = path.join(essen.path, 'api/models/', file_name);
         const model_name = file_name.split('Model')[0];
-        log.debug(model_name)
         const schema = require(file_path);
         this.models[model_name] = mongoose.model(model_name, new mongoose.Schema(schema));
         return next();

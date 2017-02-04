@@ -1,6 +1,6 @@
 {
   "name": "essen",
-  "version": "0.0.11",
+  "version": "0.1.0",
   "description": "Minimalist essential framework (based on Express)",
   "main": "index.js",
   "scripts": {

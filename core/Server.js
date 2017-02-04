@@ -85,11 +85,9 @@ class Server {
     this.essen.path = process.cwd();
     const server_config_path = path.join(this.essen.path, 'config/server.js');
     const db_config_path = path.join(this.essen.path, 'config/db.js');
-    const path_config_path = path.join(this.essen.path, 'config/path.js');
     try {
       Object.assign(this.essen.server, require(server_config_path));
       Object.assign(this.essen.db, require(db_config_path));
-      Object.assign(this.essen.path, require(path_config_path));
     } catch (err) {
       log.error(err);
       cb();
@@ -110,7 +108,7 @@ class Server {
     Serviceman.init(cb);
   }
   bootstrap(cb) {
-    const config_path = path.join(essen.path.base, 'config/bootstrap.js');
+    const config_path = path.join(essen.path, 'config/bootstrap.js');
     const bootstrap = require(config_path);
     bootstrap(cb);
   }
