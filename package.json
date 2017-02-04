@@ -1,15 +1,80 @@
 {
-  "name": "essen",
-  "version": "0.0.2",
+  "_args": [
+    [
+      {
+        "raw": "essen@>0.0.1",
+        "scope": null,
+        "escapedName": "essen",
+        "name": "essen",
+        "rawSpec": ">0.0.1",
+        "spec": ">0.0.1",
+        "type": "range"
+      },
+      "/Users/externuz/www/mc-api"
+    ]
+  ],
+  "_from": "essen@>0.0.1",
+  "_id": "essen@0.0.10",
+  "_inCache": true,
+  "_location": "/essen",
+  "_nodeVersion": "7.4.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/essen-0.0.10.tgz_1486221927168_0.33983793458901346"
+  },
+  "_npmUser": {
+    "name": "externuz",
+    "email": "externuz@gmail.com"
+  },
+  "_npmVersion": "4.0.5",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "essen@>0.0.1",
+    "scope": null,
+    "escapedName": "essen",
+    "name": "essen",
+    "rawSpec": ">0.0.1",
+    "spec": ">0.0.1",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/essen/-/essen-0.0.10.tgz",
+  "_shasum": "ba56be039096747d59e8e68bdca4fdaacb0bb15d",
+  "_shrinkwrap": null,
+  "_spec": "essen@>0.0.1",
+  "_where": "/Users/externuz/www/mc-api",
+  "author": "",
+  "dependencies": {
+    "async": "^2.1.4",
+    "body-parser": "^1.16.0",
+    "express": "^4.14.1",
+    "fs-extra": "^2.0.0",
+    "mongoose": "^4.8.1",
+    "winston": "^2.3.1"
+  },
   "description": "Minimalist essential framework (based on Express)",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "ba56be039096747d59e8e68bdca4fdaacb0bb15d",
+    "tarball": "https://registry.npmjs.org/essen/-/essen-0.0.10.tgz"
+  },
+  "license": "ISC",
   "main": "index.js",
+  "maintainers": [
+    {
+      "name": "externuz",
+      "email": "externuz@gmail.com"
+    }
+  ],
+  "name": "essen",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.13.4",
-    "mongoose": "^4.4.12"
-  }
+  "version": "0.0.10"
 }

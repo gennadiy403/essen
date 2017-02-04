@@ -1,48 +1,130 @@
-'use strict';
-var express   = require('express'),
-    fs        = require('fs'),
-    path      = require('path');
+/* global log essen */
+
+const express = require('express');
+const ORM = require('./ORM.js');
+const Router = require('./Router.js');
+const Serviceman = require('./Serviceman.js');
+const bodyParser = require('body-parser');
+const winston = require('winston');
+
+const async = require('async');
+const fs = require('fs');
+const fse = require('fs-extra');
+const path = require('path');
 
 class Server {
-  constructor(settings, parent, global) {
-    this.settings = settings;
-    this.parent   = parent;
-    this.global   = global;
-    this.express  = express();
+  constructor() {
+    this.essen = {};
+    this.essen.app = express();
   }
   start() {
-    this.express.listen(this.settings.port, () => {
-      console.log('ESSEN HTTP server listen on port ' + this.settings.port);
-      this.loadControllers();
-      this.listenRoutes();
+    this.loadPlugins(err => {
+      if (err) log.err(err);
+      log.debug('plugins loaded');
+      this.loadConfig(err => {
+        if (err) log.err(err);
+        log.debug('config loaded');
+        this.initMiddlewares(err => {
+          if (err) log.err(err);
+          log.debug('middlewares inited');
+          this.initORM(err => {
+            if (err) log.err(err);
+            log.debug('ORM models inited');
+            this.initServices(err => {
+              if (err) log.err(err);
+              log.debug('services inited');
+              this.bootstrap(err => {
+                if (err) log.err(err);
+                log.debug('bootstrap executed');
+                this.initRouter(err => {
+                  if (err) log.err(err);
+                  log.debug('routes inited');
+                  this.startServer();
+                });
+              });
+            });
+          });
+        });
+      });
     });
   }
-  listenRoutes() {
-    this.routes = require(path.join(this.parent.appPath, 'config', 'routes.js'));
-    for (let route in this.routes) {
-      if (this.routes.hasOwnProperty(route)) {
-        if (this.routes[route].method == 'get') {
-          console.log('ESSEN listen new GET route: ' + route);
-          this.express.get(route, (req, res) => {
-            this.controllers[this.routes[route].controller][this.routes[route].action](req, res);
-          });
-        }
-        if (this.routes[route].method == 'post') {
-          console.log('ESSEN listen new POST route: ' + route);
-          this.express.post(route, (req, res) => {
-            this.controllers[this.routes[route].controller][this.routes[route].action](req, res);
-          });
-        }
-      }
+  loadPlugins(cb) {
+    global.essen = this.essen;
+    global.async = async;
+    global.fs = fs;
+    global.fse = fse;
+    global.path = path;
+    global.log = new (winston.Logger)({
+      transports: [
+        new (winston.transports.Console)({
+          colorize: true,
+          timestamp: () => new Date().toTimeString().split(' ')[0],
+          formatter(options) {
+            return options.timestamp()
+              + ' - '
+              + winston.config.colorize(options.level, options.level.toUpperCase())
+              + ' - '
+              + (options.message ? options.message : '')
+              + (options.meta && Object.keys(options.meta).length ? '\n' + JSON.stringify(options.meta, null, 2) : '' );
+          },
+        }),
+      ],
+    });
+    global.log.level = 'debug';
+    return cb();
+  }
+  loadConfig(cb) {
+    this.essen.server = {
+      port: 1440,
+      name: 'essen server',
+    };
+    this.essen.db = {
+      host: 'localhost',
+      name: 'essen',
+    };
+    this.essen.path = {
+      base: path.join(__dirname, '../../../'),
+    };
+    const server_config_path = path.join(this.essen.path.base, 'config/server.js');
+    const db_config_path = path.join(this.essen.path.base, 'config/db.js');
+    const path_config_path = path.join(this.essen.path.base, 'config/path.js');
+    try {
+      Object.assign(this.essen.server, require(server_config_path));
+      Object.assign(this.essen.db, require(db_config_path));
+      Object.assign(this.essen.path, require(path_config_path));
+    } catch (err) {
+      log.error(err);
+      cb();
+    } finally {
+      cb();
     }
   }
-  loadControllers() {
-    this.controllers = {};
-    fs.readdir(path.join(this.parent.appPath, 'controllers/'), (err, controllersFilesNames) => {
-      for (let controllerFileName of controllersFilesNames) {
-        let controllerName = controllerFileName.slice(0, controllerFileName.length - 3);
-        this.controllers[controllerName] = require(path.join(this.parent.appPath, 'controllers', controllerFileName));
-      }
+  initMiddlewares(cb) {
+    this.essen.app.use(bodyParser.urlencoded({ extended: false }));
+    this.essen.app.use(bodyParser.json());
+    this.essen.app.use(express.static(path.join(this.essen.path.base, 'dist')));
+    return cb();
+  }
+  initORM(cb) {
+    ORM.init(cb);
+  }
+  initServices(cb) {
+    Serviceman.init(cb);
+  }
+  bootstrap(cb) {
+    const config_path = path.join(essen.path.base, 'config/bootstrap.js');
+    const bootstrap = require(config_path);
+    bootstrap(cb);
+  }
+  initRouter(cb) {
+    const router = new Router(this.essen);
+    router.init(cb);
+  }
+  startServer() {
+    this.essen.app.listen(this.essen.server.port, err => {
+      if (err) log.err(err);
+      log.info(`${this.essen.server.name} listening on port ${this.essen.server.port}`);
+      log.info(`using db ${this.essen.db.name} at ${this.essen.db.host}`);
     });
   }
 }
