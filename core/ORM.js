@@ -1,5 +1,3 @@
-/* global essen log fs path async */
-
 const async = require('async');
 const fs = require('fs');
 const path = require('path');

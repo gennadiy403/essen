@@ -1,48 +1,55 @@
 /* global log essen */
 
-const express = require('express');
-const Generator = require('./Generator');
-const ORM = require('./ORM.js');
-const Router = require('./Router.js');
-const Serviceman = require('./Serviceman.js');
-const bodyParser = require('body-parser');
-const winston = require('winston');
+const express = require('express')
+const Configurator = require('./Configurator.js')
+const Generator = require('./Generator')
+const ORM = require('./ORM.js')
+const Router = require('./Router.js')
+const Serviceman = require('./Serviceman.js')
+const bodyParser = require('body-parser')
+const winston = require('winston')
 
-const async = require('async');
-const fs = require('fs');
-const fse = require('fs-extra');
-const path = require('path');
+const async = require('async')
+const fs = require('fs')
+const fse = require('fs-extra')
+const path = require('path')
 
 class Server {
   constructor() {
-    this.essen = {};
-    this.essen.app = express();
+    this.essen = {
+      app: express(),
+      path: process.cwd(),
+      server: {},
+      db: {}
+    }
   }
   start() {
     this.loadPlugins(err => {
-      if (err) log.error(err);
+      if (err) return log.error(err)
       Generator.init(err => {
-        if (err) log.error(err)
-        log.debug('plugins loaded');
-        this.loadConfig(err => {
-          if (err) log.err(err);
-          log.debug('config loaded');
+        if (err) return log.error(err)
+        log.debug('plugins loaded')
+        Configurator.init(this.essen.path, (err, config) => {
+          if (err) return log.err(err)
+          log.debug('config loaded')
+          this.essen = Object.assign(this.essen, config)
+          log.debug('config loaded')
           this.initMiddlewares(err => {
-            if (err) log.err(err);
-            log.debug('middlewares inited');
+            if (err) log.err(err)
+            log.debug('middlewares inited')
             this.initORM(err => {
-              if (err) log.err(err);
-              log.debug('ORM models inited');
+              if (err) log.err(err)
+              log.debug('ORM models inited')
               this.initServices(err => {
-                if (err) log.err(err);
-                log.debug('services inited');
+                if (err) log.err(err)
+                log.debug('services inited')
                 this.bootstrap(err => {
-                  if (err) log.err(err);
-                  log.debug('bootstrap executed');
+                  if (err) log.err(err)
+                  log.debug('bootstrap executed')
                   this.initRouter(err => {
-                    if (err) log.err(err);
-                    log.debug('routes inited');
-                    this.startServer();
+                    if (err) log.err(err)
+                    log.debug('routes inited')
+                    this.startServer()
                   });
                 });
               });
@@ -74,15 +81,7 @@ class Server {
     return cb();
   }
   loadConfig(cb) {
-    this.essen.server = {
-      port: 1440,
-      name: 'essen server',
-    };
-    this.essen.db = {
-      host: 'localhost',
-      name: 'essen',
-    };
-    this.essen.path = process.cwd();
+    // 
     const server_config_path = path.join(this.essen.path, 'config/server.js');
     const db_config_path = path.join(this.essen.path, 'config/db.js');
     try {
@@ -92,6 +91,7 @@ class Server {
       log.error(err);
       cb();
     } finally {
+      log.info(this.essen)
       cb();
     }
   }

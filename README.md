@@ -4,6 +4,7 @@ Minimalistic essential backend framework
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 
+## Quick start (app.js)
 ```javascript
 const Essen = require('essen')
 const server = new Essen()
