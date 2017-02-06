@@ -1,14 +1,15 @@
 /* global log essen */
 
-const express = require('express')
-const Configurator = require('./Configurator.js')
-const Generator = require('./Generator')
+const EConfigurator = require('./EConfigurator')
+const EGenerator = require('./EGenerator')
+const EMiddleware = require('./EMiddleware')
+
 const ORM = require('./ORM.js')
 const Router = require('./Router.js')
 const Serviceman = require('./Serviceman.js')
-const bodyParser = require('body-parser')
-const winston = require('winston')
 
+const express = require('express')
+const winston = require('winston')
 const async = require('async')
 const fs = require('fs')
 const fse = require('fs-extra')
@@ -26,15 +27,14 @@ class Server {
   start() {
     this.loadPlugins(err => {
       if (err) return log.error(err)
-      Generator.init(err => {
+      EGenerator.init(err => {
         if (err) return log.error(err)
-        log.debug('plugins loaded')
-        Configurator.init(this.essen.path, (err, config) => {
+        EConfigurator.init(this.essen.path, (err, config) => {
+          log.level = config.log.level
           if (err) return log.err(err)
           log.debug('config loaded')
           this.essen = Object.assign(this.essen, config)
-          log.debug('config loaded')
-          this.initMiddlewares(err => {
+          EMiddleware.init(this.essen, err => {
             if (err) log.err(err)
             log.debug('middlewares inited')
             this.initORM(err => {
@@ -77,28 +77,7 @@ class Server {
         }),
       ],
     });
-    global.log.level = 'debug';
-    return cb();
-  }
-  loadConfig(cb) {
-    // 
-    const server_config_path = path.join(this.essen.path, 'config/server.js');
-    const db_config_path = path.join(this.essen.path, 'config/db.js');
-    try {
-      Object.assign(this.essen.server, require(server_config_path));
-      Object.assign(this.essen.db, require(db_config_path));
-    } catch (err) {
-      log.error(err);
-      cb();
-    } finally {
-      log.info(this.essen)
-      cb();
-    }
-  }
-  initMiddlewares(cb) {
-    this.essen.app.use(bodyParser.urlencoded({ extended: false }));
-    this.essen.app.use(bodyParser.json());
-    this.essen.app.use(express.static(path.join(this.essen.path, 'dist')));
+    global.log.level = 'silly';
     return cb();
   }
   initORM(cb) {

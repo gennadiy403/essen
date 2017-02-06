@@ -2,7 +2,7 @@ const async = require('async')
 const fse = require('fs-extra')
 const path = require('path')
 
-module.exports = class Generator {
+module.exports = class EGenerator {
   static get base_path() {
     return process.cwd()
   }
@@ -14,13 +14,14 @@ module.exports = class Generator {
       'config',
       'api/controllers',
       'api/models',
+      'api/middlewares'
     ]
   }
   static init(cb) {
-    async.each(Generator.folders, (folder, next) => {
+    async.each(EGenerator.folders, (folder, next) => {
       const args = [
-        path.join(Generator.default_path, folder),
-        path.join(Generator.base_path, folder),
+        path.join(EGenerator.default_path, folder),
+        path.join(EGenerator.base_path, folder),
       ]
       fse.copySync(...args, { overwrite : false })
       return next()
