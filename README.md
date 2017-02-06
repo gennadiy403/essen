@@ -31,7 +31,7 @@ project directory
   * `config/db.js` - DB config. Change host and DB name for your mongoDB  
   * `config/bootstrap.js` - code inside this module will be executed before HTTP server starts  
   * `config/routes.js` - Router config. Configure your routes as you wish  
-  * `config/env.js` - not working (in development)
+  * `config/env.js` - Environment configs. Configure DB and server for each NODE_ENV
   * `api/controllers` - controllers directory. Check `IndexController.js` for example  
   * `api/models` - models directory. Check `UserModel` for example
 
@@ -42,7 +42,6 @@ project directory
   * Quick start
 
 ## TODO
-  * Environment configs support `config/env.js`
   * Core refactoring
   * Custom security policies
   * Custom middlewares
