@@ -1,7 +1,6 @@
 /* global log essen */
 
 const EConfigurator = require('./EConfigurator')
-const EGenerator = require('./EGenerator')
 const EMiddleware = require('./EMiddleware')
 const EORM = require('./EORM.js')
 const ERouter = require('./ERouter.js')
