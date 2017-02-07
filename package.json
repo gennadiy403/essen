@@ -1,6 +1,6 @@
 {
   "name": "essen",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Minimalistic essential MVC framework",
   "main": "index.js",
   "bin" : {
@@ -19,6 +19,9 @@
     "underscore": "^1.8.3",
     "winston": "^2.3.1"
   },
+  "keywords": [
+    "essen", "essenjs", "node", "nodejs", "MVC", "framework", "backend"
+  ],
   "author": "externuz@gmail.com",
   "license": "ISC",
   "bugs": {
