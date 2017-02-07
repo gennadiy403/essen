@@ -14,7 +14,8 @@ module.exports = class EGenerator {
       'config',
       'api/controllers',
       'api/models',
-      'api/middlewares'
+      'api/middlewares',
+      'api/services'
     ]
   }
   static init(cb) {

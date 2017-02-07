@@ -3,10 +3,9 @@
 const EConfigurator = require('./EConfigurator')
 const EGenerator = require('./EGenerator')
 const EMiddleware = require('./EMiddleware')
-
-const ORM = require('./ORM.js')
-const Router = require('./Router.js')
-const Serviceman = require('./Serviceman.js')
+const EORM = require('./EORM.js')
+const ERouter = require('./ERouter.js')
+const EServiceman = require('./EServiceman.js')
 
 const express = require('express')
 const winston = require('winston')
@@ -15,13 +14,11 @@ const fs = require('fs')
 const fse = require('fs-extra')
 const path = require('path')
 
-class Server {
+module.exports = class EServer {
   constructor() {
     this.essen = {
       app: express(),
       path: process.cwd(),
-      server: {},
-      db: {}
     }
   }
   start() {
@@ -37,10 +34,10 @@ class Server {
           EMiddleware.init(this.essen, err => {
             if (err) log.err(err)
             log.debug('middlewares inited')
-            this.initORM(err => {
+            EORM.init(err => {
               if (err) log.err(err)
               log.debug('ORM models inited')
-              this.initServices(err => {
+              EServiceman.init(this.essen, err => {
                 if (err) log.err(err)
                 log.debug('services inited')
                 this.bootstrap(err => {
@@ -80,19 +77,13 @@ class Server {
     global.log.level = 'silly';
     return cb();
   }
-  initORM(cb) {
-    ORM.init(cb);
-  }
-  initServices(cb) {
-    Serviceman.init(cb);
-  }
   bootstrap(cb) {
     const config_path = path.join(essen.path, 'config/bootstrap.js');
     const bootstrap = require(config_path);
     bootstrap(cb);
   }
   initRouter(cb) {
-    const router = new Router(this.essen);
+    const router = new ERouter(this.essen);
     router.init(cb);
   }
   startServer() {
@@ -103,5 +94,3 @@ class Server {
     });
   }
 }
-
-module.exports = Server;

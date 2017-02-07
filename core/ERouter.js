@@ -2,11 +2,11 @@ const fs = require('fs')
 const path = require('path')
 const async = require('async')
 
-class Router {
+module.exports = class ERouter {
   constructor(essen) {
-    this.essen = essen;
-    this.controllers = {};
-    this.routes = {};
+    this.essen = essen
+    this.controllers = {}
+    this.routes = {}
   }
   init(cb) {
     this.loadControllers(() => {
@@ -39,5 +39,3 @@ class Router {
     }
   }
 }
-
-module.exports = Router

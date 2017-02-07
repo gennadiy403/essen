@@ -7,9 +7,12 @@ const async = require('async')
 module.exports = class EMiddleware {
   static init(essen, cb) {
     EMiddleware.essen = essen
+    EMiddleware.uses = {}
     EMiddleware.loadDefaultMiddlewares(err => {
       EMiddleware.loadCustomMiddlewares(err => {
-        return cb()
+        EMiddleware.initCustomMiddlewares(err => {
+          return cb()
+        })
       })
     })
   }
@@ -24,9 +27,17 @@ module.exports = class EMiddleware {
     fs.readdir(middlewares_path, (err, files) => {
       async.each(files, (file, next) => {
         const file_path = path.join(middlewares_path, file)
-        EMiddleware.essen.app.use(require(file_path))
+        const middleware_name = file.split('.')[0]
+        EMiddleware.uses[middleware_name] = file_path
+        // EMiddleware.essen.app.use(require(file_path))
         return next()
       }, cb)
     })
+  }
+  static initCustomMiddlewares(cb) {
+    async.each(EMiddleware.essen.middlewares, (middleware, next) => {
+      EMiddleware.essen.app.use(require(EMiddleware.uses[middleware]))
+      return next()
+    }, cb)
   }
 }

@@ -15,6 +15,7 @@ module.exports = class EConfigurator {
     config.db = require(path.join(EConfigurator.path, 'db.js'))
     config.server = require(path.join(EConfigurator.path, 'server.js'))
     config.log = require(path.join(EConfigurator.path, 'log.js'))
+    config.middlewares = require(path.join(EConfigurator.path, 'middlewares.js'))
     fs.readdir(EConfigurator.path, (err, files) => {
       if (files.includes('env.js')) {
         let env_config = require(path.join(EConfigurator.path, 'env.js'))
@@ -22,6 +23,7 @@ module.exports = class EConfigurator {
         config.db = _.extend(config.db, env_config.db ? env_config.db : {})
         config.server = _.extend(config.server, env_config.server ? env_config.server : {})
         config.log = _.extend(config.log, env_config.log ? env_config.log : {})
+        config.middlewares = _.extend(config.middlewares, env_config.middlewares ? env_config.middlewares : {})
         return cb(null, config)
       } else {
         return cb(null, config)

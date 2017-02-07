@@ -1,2 +1,2 @@
-const Server = require('./core/Server.js')
-module.exports = Server
+const Core = require('./core/ECore.js')
+module.exports = Core

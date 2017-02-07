@@ -44,6 +44,7 @@ project directory
   * Human style controllers
   * Human style models
   * Human style custom middlewares
+  * Environment configs
 
 ## TODO
   * Core errors handling
