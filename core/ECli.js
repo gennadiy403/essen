@@ -28,7 +28,7 @@ module.exports = class ECli {
           fse.copySync(path.join(ECli.path, 'app.js'), path.join(ECli.dest, 'app.js'))
           process.chdir(ECli.dest)
           exec('npm install', (err, stdout, stderr) => {
-            console.log(`essen empty project successfully cteated at ${ECli.dest}`)            
+            console.log(`essen empty project successfully created at ${ECli.dest}`)            
           }).stderr.pipe(process.stderr)
         }
       })
