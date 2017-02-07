@@ -1,6 +1,5 @@
 # Essen.js
-Minimalistic essential MVC framework  
-<sub>Inspired by Sails.js, powered by Express.js</sub>
+Inspired by Sails.js, powered by Express.js
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
