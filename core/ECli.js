@@ -7,7 +7,11 @@ module.exports = class ECli {
   static init(argv) {
     ECli.command = argv[2]
     ECli.path = path.join(__dirname, '../templates/default')
-    ECli.dest = path.join(process.cwd(), argv[3])
+    if (argv[3].split('')[0] == '/') {
+      ECli.dest = argv[3]
+    } else {
+      ECli.dest = path.join(process.cwd(), argv[3])
+    }
     switch(ECli.command) {
       case 'create':
         ECli.create()
