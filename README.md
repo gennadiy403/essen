@@ -4,27 +4,18 @@ Minimalistic essential backend framework
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 
-## Quick start (app.js)
-```javascript
-const Essen = require('essen')
-const server = new Essen()
-
-server.start()
-```
-
-## Installation
+## Install
 
 ```bash
-$ npm init -y
-$ npm install essen --save
+$ npm install essen -g
+$ essen create project_name
 ```
 
 ## Run
 ```bash
+$ cd project_name
 $ node app.js
 ```
-After first run, Essen.js creates `api/` and `config/` folders in your
-project directory
 
 ## Configure
   * `config/server.js` - server config. Change port and name for your app  

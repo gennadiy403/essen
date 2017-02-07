@@ -24,30 +24,27 @@ module.exports = class EServer {
   start() {
     this.loadPlugins(err => {
       if (err) return log.error(err)
-      EGenerator.init(err => {
-        if (err) return log.error(err)
-        EConfigurator.init(this.essen.path, (err, config) => {
-          log.level = config.log.level
-          if (err) return log.err(err)
-          log.debug('config loaded')
-          this.essen = Object.assign(this.essen, config)
-          EMiddleware.init(this.essen, err => {
+      EConfigurator.init(this.essen.path, (err, config) => {
+        log.level = config.log.level
+        if (err) return log.err(err)
+        log.debug('config loaded')
+        this.essen = Object.assign(this.essen, config)
+        EMiddleware.init(this.essen, err => {
+          if (err) log.err(err)
+          log.debug('middlewares inited')
+          EORM.init(err => {
             if (err) log.err(err)
-            log.debug('middlewares inited')
-            EORM.init(err => {
+            log.debug('ORM models inited')
+            EServiceman.init(this.essen, err => {
               if (err) log.err(err)
-              log.debug('ORM models inited')
-              EServiceman.init(this.essen, err => {
+              log.debug('services inited')
+              this.bootstrap(err => {
                 if (err) log.err(err)
-                log.debug('services inited')
-                this.bootstrap(err => {
+                log.debug('bootstrap executed')
+                this.initRouter(err => {
                   if (err) log.err(err)
-                  log.debug('bootstrap executed')
-                  this.initRouter(err => {
-                    if (err) log.err(err)
-                    log.debug('routes inited')
-                    this.startServer()
-                  });
+                  log.debug('routes inited')
+                  this.startServer()
                 });
               });
             });
