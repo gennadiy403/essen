@@ -144,7 +144,6 @@ module.exports = class EServer {
   }
   initRouter(context) {
     return new Promise((resolve, reject) => {
-      console.log(context.essen);
       try {
         const router = new ERouter(context.essen);
         router.init(() => {
@@ -158,7 +157,6 @@ module.exports = class EServer {
     })
   }
   startServer(context) {
-    console.log('start!!');
     return new Promise((resolve, reject) => {
       context.essen.app.listen(context.essen.server.port, err => {
         if (err) {
