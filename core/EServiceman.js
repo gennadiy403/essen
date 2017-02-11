@@ -7,7 +7,7 @@ module.exports = class EServiceman {
     return new Promise((resolve, reject) => {
       EServiceman.path = path.join(essen.path, 'api/services')
       EServiceman.loadServices(err => {
-        if (err) reject ('services init error')
+        if (err) reject (`services init error ${err}`)
         log.debug('services inited')
         resolve()
       })

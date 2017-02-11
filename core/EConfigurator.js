@@ -9,7 +9,7 @@ module.exports = class EConfigurator {
     return new Promise((resolve, reject) => {
       EConfigurator.path = path.join(essen.path, 'config')
       EConfigurator.readConfigs((err, config) => {
-        if (err) reject('EConfigurator error', err)
+        if (err) reject(`EConfigurator error ${err}`)
         log.level = config.log.level
         essen = Object.assign(essen, config)
         log.debug('config loaded')

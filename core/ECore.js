@@ -10,10 +10,6 @@ const ERouter = require('./ERouter')
 const EServerStart = require('./EServerStart')
 
 const express = require('express')
-const async = require('async')
-const fs = require('fs')
-const fse = require('fs-extra')
-const path = require('path')
 
 let path_dir = process.argv[1].split('/')
 path_dir.pop()

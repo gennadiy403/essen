@@ -12,7 +12,7 @@ module.exports = class EBootstrapLoader {
           resolve()
         })
       } catch(err) {
-        reject('bootstrap execute error')
+        reject(`bootstrap execute error ${err}`)
       }
     })
   }

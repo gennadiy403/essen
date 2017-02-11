@@ -10,7 +10,7 @@ module.exports = new class {
   init(essen) {
     return new Promise((resolve, reject) => {
       this.loadModels(essen, err => {
-        if (err) reject('ORM models error', err)
+        if (err) reject(`ORM models error ${err}`)
         this.initModels(essen, err => {
           if (err) reject('ORM models error', err)
           log.debug('ORM models inited')
