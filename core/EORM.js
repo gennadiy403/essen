@@ -7,16 +7,19 @@ module.exports = new class {
   constructor() {
     this.models = {};
   }
-  init(cb) {
-    this.loadModels(err => {
-      if (err) log.error(err);
-      this.initModels(err => {
-        if (err) log.error(err);
-        return cb();
+  init(essen) {
+    return new Promise((resolve, reject) => {
+      this.loadModels(essen, err => {
+        if (err) reject('ORM models error', err)
+        this.initModels(essen, err => {
+          if (err) reject('ORM models error', err)
+          log.debug('ORM models inited')
+          return resolve();
+        });
       });
-    });
+    })
   }
-  loadModels(cb) {
+  loadModels(essen, cb) {
     fs.readdir(path.join(essen.path, 'api/models/'), (err, files_names) => {
       async.each(files_names, (file_name, next) => {
         const file_path = path.join(essen.path, 'api/models/', file_name);
@@ -27,7 +30,7 @@ module.exports = new class {
       }, cb);
     });
   }
-  initModels(cb) {
+  initModels(essen, cb) {
     mongoose.Promise = global.Promise;
     mongoose.connect(`mongodb://${essen.db.host}/${essen.db.name}`);
     for (let model_name in this.models) {

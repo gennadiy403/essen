@@ -5,13 +5,19 @@ const fs = require('fs')
 const async = require('async')
 
 module.exports = class EMiddleware {
-  static init(essen, cb) {
-    EMiddleware.essen = essen
-    EMiddleware.uses = {}
-    EMiddleware.loadDefaultMiddlewares(err => {
-      EMiddleware.loadCustomMiddlewares(err => {
-        EMiddleware.initCustomMiddlewares(err => {
-          return cb()
+  static init(essen) {
+    return new Promise((resolve, reject) => {
+      EMiddleware.essen = essen
+      EMiddleware.uses = {}
+      EMiddleware.loadDefaultMiddlewares(err => {
+        if (err) reject(`middleware init error ${err}`)
+        EMiddleware.loadCustomMiddlewares(err => {
+          if (err) reject(`middleware init error ${err}`)
+          EMiddleware.initCustomMiddlewares(err => {
+            if (err) reject(`middleware init error ${err}`)
+            log.debug('middleware inited')
+            resolve()
+          })
         })
       })
     })

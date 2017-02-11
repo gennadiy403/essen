@@ -1,16 +1,24 @@
 const _ = require('underscore')
 const fs = require('fs')
 const fse = require('fs-extra')
+const express = require('express')
 const path = require('path')
 
 module.exports = class EConfigurator {
-  static init(base_path, cb) {
-    EConfigurator.path = path.join(base_path, 'config')
-    EConfigurator.readConfigs((err, config) => {
-      return cb(null, config)
+  static init(essen) {
+    return new Promise((resolve, reject) => {
+      EConfigurator.path = path.join(essen.path, 'config')
+      EConfigurator.readConfigs((err, config) => {
+        if (err) reject('EConfigurator error', err)
+        log.level = config.log.level
+        essen = Object.assign(essen, config)
+        log.debug('config loaded')
+        resolve()
+      })
     })
   }
   static readConfigs(cb) {
+
     let config = {}
     config.db = require(path.join(EConfigurator.path, 'db.js'))
     config.server = require(path.join(EConfigurator.path, 'server.js'))

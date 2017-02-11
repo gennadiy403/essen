@@ -3,11 +3,14 @@ const path = require('path')
 const fs = require('fs')
 
 module.exports = class EServiceman {
-  static init(essen, cb) {
-    EServiceman.path = path.join(essen.path, 'api/services')
-    EServiceman.loadServices(err => {
-      if (err) return cb(err)
-      return cb()
+  static init(essen) {
+    return new Promise((resolve, reject) => {
+      EServiceman.path = path.join(essen.path, 'api/services')
+      EServiceman.loadServices(err => {
+        if (err) reject ('services init error')
+        log.debug('services inited')
+        resolve()
+      })
     })
   }
   static loadServices(cb) {
